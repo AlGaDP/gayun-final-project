@@ -10,6 +10,6 @@ export const appConf = {
     type: isProd ? ROUTER_TYPE_BROWSER : ROUTER_TYPE_HASH,
   },
   api: {
-    baseURL: "/api", // todo change this
+    baseURL: "https://60d6c6a9307c300017a5f4af.mockapi.io", // todo change this
   },
 };
