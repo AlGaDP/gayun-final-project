@@ -20,20 +20,19 @@ const useStyles = makeStyles((theme) => ({
 
 export default function ProductGrid() {
   const classes = useStyles();
-  
-  const {data, error, isLoading} = useQuery("catalog", async () => {
+    const {data, error, isLoading} = useQuery("catalog", async () => {
     let {data} = await getCatalog();
     return data;
   });
 
   function FormRow() {
-    return (
+      return (
       <React.Fragment>
         {data.map((catalog) => (
           <Grid item xs={4}>
           {/* <Paper className={classes.paper}> */}
           <ProductList productTitle = {catalog.title} productImage = {catalog.photo} productDescription = {catalog.description}
-           productPrice = {catalog.price}/>
+           productPrice = {catalog.price} productId = {catalog.id} />
           {/* </Paper> */}
         </Grid>
        ))}

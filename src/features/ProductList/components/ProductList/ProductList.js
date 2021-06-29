@@ -46,16 +46,20 @@ export default function ProductList(props) {
 
   const handleExpandClick = () => {
     setExpanded(!expanded);
-
-    
   };
+
+  const handleToProduct = (id) => {
+    console.log(id, "--id");
+      };
+
   let productTitle = props.productTitle;
   let productImage = props.productImage;
   let productDescription = props.productDescription;
   let productPrice = props.productPrice;
+  let productId = props.productId;
  
   return (
-    <Card className={classes.root}>
+    <Card className={classes.root} >
       <CardHeader
         avatar={
           <Avatar aria-label="recipe" className={classes.avatar}>
@@ -73,7 +77,7 @@ export default function ProductList(props) {
         className={classes.media}
         image={productImage}
         title="Product Image Title"
-      />
+        onClick={handleToProduct(productId)}/>
       <CardContent>
         <Typography variant="body2" color="textSecondary" component="p">
           {productDescription}
