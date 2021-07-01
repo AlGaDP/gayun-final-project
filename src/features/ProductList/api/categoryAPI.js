@@ -7,3 +7,7 @@ export function getCategory(){
 export function getCatalog(){
     return axiosInstance.get('/catalog');
 }
+
+export function getProduct(id){
+    return axiosInstance.get(`/catalog/${id}`);
+}

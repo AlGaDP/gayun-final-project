@@ -18,17 +18,27 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function ProductGrid() {
+export default function ProductGrid(props) {
+  let min = props.price[0];
+  let max = props.price[1];
+  console.log (min, 'min');
+    console.log (props, 'props');
   const classes = useStyles();
     const {data, error, isLoading} = useQuery("catalog", async () => {
     let {data} = await getCatalog();
+    
     return data;
   });
 
   function FormRow() {
+    const dataPrice = data.filter(product => (product.price > min && product.price < max));
+   // console.log (min, 'min');
+    //console.log (max, 'max');
+    console.log (dataPrice, 'dataPrice');
+
       return (
       <React.Fragment>
-        {data.map((catalog) => (
+        {dataPrice.map((catalog) => (
           <Grid item xs={4}>
           {/* <Paper className={classes.paper}> */}
           <ProductList productTitle = {catalog.title} productImage = {catalog.photo} productDescription = {catalog.description}

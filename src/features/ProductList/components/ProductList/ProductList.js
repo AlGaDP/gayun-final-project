@@ -16,6 +16,10 @@ import ShareIcon from '@material-ui/icons/Share';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import Box from "@material-ui/core/Box";
+import { LinkProduct } from '../Link';
+
+
+
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -48,10 +52,6 @@ export default function ProductList(props) {
     setExpanded(!expanded);
   };
 
-  const handleToProduct = (id) => {
-    console.log(id, "--id");
-      };
-
   let productTitle = props.productTitle;
   let productImage = props.productImage;
   let productDescription = props.productDescription;
@@ -77,7 +77,7 @@ export default function ProductList(props) {
         className={classes.media}
         image={productImage}
         title="Product Image Title"
-        onClick={handleToProduct(productId)}/>
+        />
       <CardContent>
         <Typography variant="body2" color="textSecondary" component="p">
           {productDescription}
@@ -90,8 +90,9 @@ export default function ProductList(props) {
         <IconButton aria-label="share">
           <ShareIcon />
         </IconButton>
+           <LinkProduct productId={productId}/>
         <Box>
-          Цена: {productPrice} грн
+          Цена: {productPrice}
         </Box>
       </CardActions>
     </Card>
