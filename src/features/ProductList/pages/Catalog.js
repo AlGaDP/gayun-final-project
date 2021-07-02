@@ -7,6 +7,9 @@ import { Container } from '@material-ui/core';
 import ProductGrid from "../components/ProductGrid/ProductGrid";
 import Grid from '@material-ui/core/Grid';
 import FilterBox from '../../productfilters/components/FilterBox/FilterBox';
+import {PriceSlider} from '../../../features/productfilters/components/PriceSlider/PriceSlider';
+import Typography from '@material-ui/core/Typography';
+import Slider from '@material-ui/core/Slider';
 
 
 import { makeStyles } from '@material-ui/core/styles';
@@ -22,6 +25,9 @@ const useStyles = makeStyles((theme) => ({
     control: {
       padding: theme.spacing(2),
     },
+    slider: {
+      width: 300,
+    },
   }));
 
 export function Catalog() {
@@ -30,6 +36,14 @@ const {data, error, isLoading} = useQuery("catalog", async () => {
   let {data} = await getCatalog();
   return data;
 });
+
+  let max = data.reduce((acc, curr) => acc.price > curr.price ? acc : curr);
+  let min = data.reduce((acc, curr) => acc.price <= curr.price ? acc : curr);
+  
+  const [value, setValue] = React.useState([Math.round(min.price), Math.round(max.price)]);
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
+  };
 
 return (
     <div className="page">
@@ -40,10 +54,23 @@ return (
      ) : (
         <Grid container className={classes.root} spacing={2}>
             <Grid item xs={3}>
-           <FilterBox/>
+              < div className={classes.slider}>
+              <Typography id="range-slider" gutterBottom>
+        Диапазон цен
+      </Typography>
+      <Slider
+        value={value}
+        onChange={handleChange}
+        valueLabelDisplay="auto"
+        aria-labelledby="range-slider"
+        //getAriaValueText={valuetext}
+        min={Math.round(min.price)}
+        max={Math.round(max.price)}
+      />
+              </div>
            </Grid>
            <Grid item xs={9}>
-          {/* <ProductGrid/> */}
+          <ProductGrid price={value} data={data}/>
        </Grid>
       </Grid>
      )

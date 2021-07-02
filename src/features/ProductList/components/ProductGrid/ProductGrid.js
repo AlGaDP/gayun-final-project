@@ -1,11 +1,7 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import ProductList from '../ProductList/ProductList';
-import {getCatalog} from '../../api/categoryAPI';
-import { useQuery } from 'react-query';
-
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -21,30 +17,20 @@ const useStyles = makeStyles((theme) => ({
 export default function ProductGrid(props) {
   let min = props.price[0];
   let max = props.price[1];
-  console.log (min, 'min');
-    console.log (props, 'props');
+ 
   const classes = useStyles();
-    const {data, error, isLoading} = useQuery("catalog", async () => {
-    let {data} = await getCatalog();
-    
-    return data;
-  });
-
+  
   function FormRow() {
-    const dataPrice = data.filter(product => (product.price > min && product.price < max));
-   // console.log (min, 'min');
-    //console.log (max, 'max');
-    console.log (dataPrice, 'dataPrice');
-
-      return (
+    
+    const dataPrice = props.data.filter(product => (product.price > min && product.price < max));
+   
+    return (
       <React.Fragment>
         {dataPrice.map((catalog) => (
           <Grid item xs={4}>
-          {/* <Paper className={classes.paper}> */}
-          <ProductList productTitle = {catalog.title} productImage = {catalog.photo} productDescription = {catalog.description}
+            <ProductList productTitle = {catalog.title} productImage = {catalog.photo} productDescription = {catalog.description}
            productPrice = {catalog.price} productId = {catalog.id} />
-          {/* </Paper> */}
-        </Grid>
+          </Grid>
        ))}
         
       </React.Fragment>

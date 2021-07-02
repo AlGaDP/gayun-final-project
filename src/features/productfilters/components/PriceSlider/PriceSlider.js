@@ -17,16 +17,16 @@ function valuetext(value) {
 }
 
 export function PriceSlider(props) {
-  const {data, error, isLoading} = useQuery("catalog", async () => {
-    let {data} = await getCatalog();
-    return data;
-  });
+  // const {data, error, isLoading} = useQuery("catalog", async () => {
+  //   let {data} = await getCatalog();
+  //   return data;
+  // });
 
-  let max = data.reduce((acc, curr) => acc.price > curr.price ? acc : curr);
-  let min = data.reduce((acc, curr) => acc.price <= curr.price ? acc : curr);
+   //let max = data.reduce((acc, curr) => acc.price > curr.price ? acc : curr);
+   //let min = data.reduce((acc, curr) => acc.price <= curr.price ? acc : curr);
 
   const classes = useStyles();
-  const [value, setValue] = React.useState([Math.round(min.price), Math.round(max.price)]);
+  const [value, setValue] = React.useState([Math.round(props.min), Math.round(props.max)]);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -44,10 +44,10 @@ console.log(value, 'value');
         valueLabelDisplay="auto"
         aria-labelledby="range-slider"
         getAriaValueText={valuetext}
-        min={Math.round(min.price)}
-        max={Math.round(max.price)}
+        min={Math.round(props.min)}
+        max={Math.round(props.max)}
       />
-      <ProductGrid price={value}/>  
+      {/* <ProductGrid price={value}/>   */}
     </div>
   );
 }
