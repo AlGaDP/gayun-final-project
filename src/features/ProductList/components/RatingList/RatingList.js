@@ -6,7 +6,7 @@ import Box from '@material-ui/core/Box';
 
 
 export function RatingList(props) {
-  const [value, setValue] = React.useState(Math.ceil(props.rating/20));
+  const [value, setValue] = React.useState(props.rating);
   console.log(Math.ceil(props.rating/20), 'props.rating')
   return (
     <div>

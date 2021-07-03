@@ -1,80 +1,142 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { useQuery } from 'react-query';
-import {getCatalog} from '../api/categoryAPI';
-import ProductList from "../components/ProductList/ProductList";
-import { Container } from '@material-ui/core';
+import { getCatalog } from '../api/categoryAPI';
 import ProductGrid from "../components/ProductGrid/ProductGrid";
 import Grid from '@material-ui/core/Grid';
-import FilterBox from '../../productfilters/components/FilterBox/FilterBox';
-import {PriceSlider} from '../../../features/productfilters/components/PriceSlider/PriceSlider';
 import Typography from '@material-ui/core/Typography';
 import Slider from '@material-ui/core/Slider';
+import FormLabel from '@material-ui/core/FormLabel';
+import FormControl from '@material-ui/core/FormControl';
+import FormGroup from '@material-ui/core/FormGroup';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import FormHelperText from '@material-ui/core/FormHelperText';
+import Switch from '@material-ui/core/Switch';
 
 
 import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles((theme) => ({
-    root: {
-      flexGrow: 1,
-    },
-    paper: {
-      height: 140,
-      width: 100,
-    },
-    control: {
-      padding: theme.spacing(2),
-    },
-    slider: {
-      width: 300,
-    },
-  }));
+  root: {
+    flexGrow: 1,
+  },
+  paper: {
+    height: 140,
+    width: 100,
+  },
+  control: {
+    padding: theme.spacing(2),
+  },
+  slider: {
+    width: 300,
+  },
+}));
 
 export function Catalog() {
-const classes = useStyles();
-const {data, error, isLoading} = useQuery("catalog", async () => {
-  let {data} = await getCatalog();
-  return data;
-});
+  const classes = useStyles();
+  const { data, error, isLoading } = useQuery("catalog", async () => {
+    let { data } = await getCatalog();
+    return data;
+  });
 
-  let max = data.reduce((acc, curr) => acc.price > curr.price ? acc : curr);
-  let min = data.reduce((acc, curr) => acc.price <= curr.price ? acc : curr);
-  
-  const [value, setValue] = React.useState([Math.round(min.price), Math.round(max.price)]);
-  const handleChange = (event, newValue) => {
-    setValue(newValue);
+  let min;
+  let max;
+  let minarr = [];
+  let maxarr = [];
+
+  if (isLoading) {
+    min = 0;
+    max = 1000;
+  } else {
+    maxarr = data.reduce((acc, curr) => acc.price > curr.price ? acc : curr);
+    minarr = data.reduce((acc, curr) => acc.price <= curr.price ? acc : curr);
+    min = minarr.price;
+    max = maxarr.price;
   };
 
-return (
+  const [valuePrice, setValuePrice] = React.useState([Math.round(min), Math.round(max)]);
+  const [valueRating, setValueRating] = React.useState([1, 5]);
+  const [stateSwitch, setStateSwitch] = React.useState({
+    isSale: false,
+    isNew: false,
+    isInStock: false,
+  });
+
+  const handleChangePrice = (event, newValue) => {
+    setValuePrice(newValue);
+  };
+  const handleChangeRating = (event, newValue) => {
+    setValueRating(newValue);
+  };
+  const handleChangeSwitch = (event) => {
+    setStateSwitch({ ...stateSwitch, [event.target.name]: event.target.checked });
+  };
+
+  return (
     <div className="page">
-     {isLoading ? (
-       <div>Loading...</div>
-     ) : error ? (
-      <div>Какой-то Error {error.message}</div>
-     ) : (
+      {isLoading ? (
+        <div>Loading...</div>
+      ) : error ? (
+        <div>Какой-то Error {error.message}</div>
+      ) : (
         <Grid container className={classes.root} spacing={2}>
-            <Grid item xs={3}>
-              < div className={classes.slider}>
+          <Grid item xs={3}>
+            < div className={classes.slider}>
               <Typography id="range-slider" gutterBottom>
-        Диапазон цен
-      </Typography>
-      <Slider
-        value={value}
-        onChange={handleChange}
-        valueLabelDisplay="auto"
-        aria-labelledby="range-slider"
-        //getAriaValueText={valuetext}
-        min={Math.round(min.price)}
-        max={Math.round(max.price)}
-      />
-              </div>
-           </Grid>
-           <Grid item xs={9}>
-          <ProductGrid price={value} data={data}/>
-       </Grid>
-      </Grid>
-     )
-    }
-          </div>
+                Диапазон цен
+              </Typography>
+              <Slider
+                value={valuePrice}
+                onChange={handleChangePrice}
+                valueLabelDisplay="auto"
+                aria-labelledby="range-slider"
+                //getAriaValueText={valuetext}
+                min={Math.round(min)}
+                max={Math.round(max)}
+              />
+            </div>
+
+            < div className={classes.slider}>
+              <Typography id="range-slider" gutterBottom>
+                По рейтингу
+              </Typography>
+              <Slider
+                value={valueRating}
+                onChange={handleChangeRating}
+                valueLabelDisplay="auto"
+                aria-labelledby="range-slider"
+                //getAriaValueText={valuetext}
+                min={1}
+                max={5}
+              />
+            </div>
+            < div className={classes.slider}>
+              <FormControl component="fieldset">
+                <FormLabel component="legend">Дополнительные опции</FormLabel>
+                <FormGroup>
+                  <FormControlLabel
+                    control={<Switch checked={stateSwitch.sale} onChange={handleChangeSwitch} name="isSale" />}
+                    label="Акции"
+                  />
+                  <FormControlLabel
+                    control={<Switch checked={stateSwitch.new} onChange={handleChangeSwitch} name="isNew" />}
+                    label="Новинки"
+                  />
+                  <FormControlLabel
+                    control={<Switch checked={stateSwitch.instock} onChange={handleChangeSwitch} name="isInStock" />}
+                    label="Только в наличии"
+                  />
+                </FormGroup>
+                {/* <FormHelperText>Be careful</FormHelperText> */}
+              </FormControl>
+            </div>
+          </Grid>
+          <Grid item xs={9}>
+            <ProductGrid price={valuePrice} rating={valueRating} switch={stateSwitch} data={data} />
+          </Grid>
+        </Grid>
+      )
+      }
+    </div>
   );
 }

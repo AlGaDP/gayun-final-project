@@ -15,24 +15,40 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function ProductGrid(props) {
-  let min = props.price[0];
-  let max = props.price[1];
- 
+  let minPrice = props.price[0];
+  let maxPrice = props.price[1];
+  let minRating = props.rating[0];
+  let maxRating = props.rating[1];
+
+  const { isSale, isNew, isInStock } = props.switch;
   const classes = useStyles();
-  
+  const switchKeys = Object.keys(props.switch);
+
+
+
   function FormRow() {
-    
-    const dataPrice = props.data.filter(product => (product.price > min && product.price < max));
-   
+    let dataFiltered;
+    const dataPrice = props.data.filter(product => (product.price >= minPrice && product.price <= maxPrice));
+    const dataRating = dataPrice.filter(product => (product.rating >= minRating && product.rating <= maxRating));
+    if (isSale === false && isNew === false && isInStock === false) {
+      dataFiltered = dataRating;
+    } else {
+      dataFiltered = dataRating.filter((product) => {
+        return switchKeys.every((key) => {
+          return product[key] == props.switch[key];
+        });
+      });
+    };
+
     return (
       <React.Fragment>
-        {dataPrice.map((catalog) => (
+        {dataFiltered.map((catalog) => (
           <Grid item xs={4}>
-            <ProductList productTitle = {catalog.title} productImage = {catalog.photo} productDescription = {catalog.description}
-           productPrice = {catalog.price} productId = {catalog.id} />
+            <ProductList productTitle={catalog.title} productImage={catalog.photo} productDescription={catalog.description}
+              productPrice={catalog.price} productId={catalog.id} />
           </Grid>
-       ))}
-        
+        ))}
+
       </React.Fragment>
     );
   }
@@ -43,7 +59,7 @@ export default function ProductGrid(props) {
         <Grid container item xs={12} spacing={3}>
           <FormRow />
         </Grid>
-    </Grid>
+      </Grid>
     </div>
   );
 }
