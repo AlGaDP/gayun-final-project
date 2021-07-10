@@ -1,7 +1,9 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import Link from '@material-ui/core/Link';
 import { useHistory } from 'react-router';
+import ButtonMy from '../ButtonMy/ButtonMy';
+
+
 
 export function LinkProduct(props) {
   const productPage = useHistory();
@@ -13,7 +15,8 @@ export function LinkProduct(props) {
       productPage.push("/catalog/"+props.productId);
     }}
   >
-    <button>Подробнее</button>
+<ButtonMy color="primary" size="large"/>
+    {/* <button>Подробнее</button> */}
   </Link>
   );
 }

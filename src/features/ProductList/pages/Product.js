@@ -5,17 +5,17 @@ import { getProduct } from '../api/categoryAPI';
 import { useParams } from 'react-router';
 import { getCatalog } from '../api/categoryAPI';
 import {ProductPage} from '../components/ProductPage';
+import { useSelector } from 'react-redux';
 
-export function Product() {
+export function Product(props) {
   const params = useParams();
   const {data, error, isLoading} = useQuery("catalog", async () => {
     let {data} = await getCatalog();
     return data;
   });
   let product = data.find(catalog => catalog.id == params.id);
-  console.log (data);  
-  console.log (params.id);  
-  console.log (product.title);
+  const countProduct = useSelector(state => state.addtocart.amountProduct);
+  console.log(countProduct, 'countProduct');
   return (
     <div className="page">
     

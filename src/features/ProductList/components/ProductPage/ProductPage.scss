@@ -205,6 +205,16 @@ html, body {
     background-color: #64af3d;
   }
   
+  .cart-btn-off {
+    display: inline-block;
+    background-color: #a3a8a0;
+    border-radius: 6px;
+    font-size: 16px;
+    color: #dd2c2c;
+    text-decoration: none;
+    padding: 12px 30px;
+    transition: all .5s;
+  }
   /* Responsive */
   @media (max-width: 940px) {
     .container {

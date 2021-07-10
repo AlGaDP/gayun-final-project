@@ -24,25 +24,42 @@ export default function ProductGrid(props) {
   const classes = useStyles();
   const switchKeys = Object.keys(props.switch);
 
+  
+
 
 
   function FormRow() {
     let dataFiltered;
     const dataPrice = props.data.filter(product => (product.price >= minPrice && product.price <= maxPrice));
     const dataRating = dataPrice.filter(product => (product.rating >= minRating && product.rating <= maxRating));
+   
+   const filterSwitch = () => {
     if (isSale === false && isNew === false && isInStock === false) {
-      dataFiltered = dataRating;
+      return  dataRating;
     } else {
-      dataFiltered = dataRating.filter((product) => {
-        return switchKeys.every((key) => {
-          return product[key] == props.switch[key];
-        });
-      });
-    };
+    return dataRating.filter((product) => {
+      let result = true;
+
+      if (props.switch.isNew) {
+        result = result && product.isNew;
+      }
+
+      if (props.switch.isSale) {
+        result = result && product.isSale;
+      }
+
+      if (props.switch.isInStock) {
+        result = result && product.isInStock;
+      }
+
+      return result;
+    });
+  };
+}
 
     return (
       <React.Fragment>
-        {dataFiltered.map((catalog) => (
+        {filterSwitch().map((catalog) => (
           <Grid item xs={4}>
             <ProductList productTitle={catalog.title} productImage={catalog.photo} productDescription={catalog.description}
               productPrice={catalog.price} productId={catalog.id} />

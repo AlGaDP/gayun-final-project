@@ -7,7 +7,7 @@ import Box from '@material-ui/core/Box';
 
 export function RatingList(props) {
   const [value, setValue] = React.useState(props.rating);
-  console.log(Math.ceil(props.rating/20), 'props.rating')
+  //console.log(Math.ceil(props.rating/20), 'props.rating')
   return (
     <div>
       {/* <Box component="fieldset" mb={3} borderColor="transparent">

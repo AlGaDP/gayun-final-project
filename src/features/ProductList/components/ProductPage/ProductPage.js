@@ -4,6 +4,10 @@ import CardMedia from '@material-ui/core/CardMedia';
 import { makeStyles } from '@material-ui/core/styles';
 import { Badges } from '../Badges/Badges';
 import { RatingList } from '../RatingList/RatingList';
+import { useDispatch } from 'react-redux';
+import * as Addtocartducks from '../../../../shared/ducks/addtocart.duck';
+import { useSelector } from 'react-redux';
+
 
 import './ProductPage.scss';
 
@@ -19,6 +23,19 @@ const useStyles = makeStyles((theme) => ({
 
 export function ProductPage(props) {
   const classes = useStyles();
+  const dispatch = useDispatch();
+  const countProduct = useSelector(state => state.addtocart.amountProduct);
+  const productList = useSelector(state => state.addtocart.idProduct);
+
+  let productId = props.product.id;
+  const iconList = new Set(productList);
+  let iconCard = false;
+
+  if (iconList.length != 0) {
+    iconCard = iconList.has(productId);
+  };
+
+  //console.log (props.product.id, 'props');
   return (
     <div className="container">
 
@@ -38,32 +55,44 @@ export function ProductPage(props) {
         </div>
 
         <div className="badges">
-        {props.product.isNew ? (
-          <div>
-          <Badges message={"Новинка"}/>
-          </div>
-        ):(
-          <div>         
-          </div>
-        )}
+          {props.product.isNew ? (
+            <div>
+              <Badges message={"Новинка"} />
+            </div>
+          ) : (
+            <div>
+            </div>
+          )}
 
-        {props.product.isSale ? (
-          <div>
-          <Badges message={"Распродажа"}/>
-          </div>
-        ):(
-          <div>
-          </div>
-        )}
+          {props.product.isSale ? (
+            <div>
+              <Badges message={"Распродажа"} />
+            </div>
+          ) : (
+            <div>
+            </div>
+          )}
 
           <div>
-            <RatingList rating={props.product.rating}/>
+            <RatingList rating={props.product.rating} />
           </div>
         </div>
 
         <div className="product-price">
           <span>{props.product.price}</span>
-          <a href="#" class="cart-btn">Add to cart</a>
+          {iconCard ? (
+            <a class="cart-btn-off">В корзине</a>
+          ) : (
+            <a href="#/catalog" class="cart-btn"
+              onClick={() => {
+                dispatch(Addtocartducks.setAmountProduct(countProduct));
+                dispatch(Addtocartducks.addProductToCard(productId));
+                dispatch(Addtocartducks.setAmountProductList(productId, 1));
+
+              }}>Добавить в корзину</a>
+          )
+          }
+
         </div>
       </div>
 

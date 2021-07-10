@@ -17,8 +17,11 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import Box from "@material-ui/core/Box";
 import { LinkProduct } from '../Link';
-
-
+import IconAddToCard from '../IconAddToCard/IconAddToCard';
+import Link from '@material-ui/core/Link';
+import { useDispatch } from 'react-redux';
+import * as Addtocartducks from '../../../../shared/ducks/addtocart.duck';
+import { useSelector } from 'react-redux';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -52,20 +55,34 @@ export default function ProductList(props) {
     setExpanded(!expanded);
   };
 
+  const dispatch = useDispatch();
+  const countProduct = useSelector(state => state.addtocart.amountProduct);
+  const productList = useSelector(state => state.addtocart.idProduct);
+
   let productTitle = props.productTitle;
   let productImage = props.productImage;
   let productDescription = props.productDescription;
   let productPrice = props.productPrice;
   let productId = props.productId;
- 
+  const iconList = new Set(productList);
+  let iconCard = false;
+
+
+
+  //const iconCard = productList.has(2);
+  //console.log(productList, 'productList');
+  //console.log(iconCard, 'iconCard');
+  if (iconList.length != 0) {
+    iconCard = iconList.has(productId);
+  };
   return (
     <Card className={classes.root} >
       <CardHeader
-        avatar={
-          <Avatar aria-label="recipe" className={classes.avatar}>
-            R
-          </Avatar>
-        }
+        // avatar={
+        //   <Avatar aria-label="recipe" className={classes.avatar}>
+        //     R
+        //   </Avatar>
+        // }
         action={
           <IconButton aria-label="settings">
             <MoreVertIcon />
@@ -76,24 +93,41 @@ export default function ProductList(props) {
       <CardMedia
         className={classes.media}
         image={productImage}
-        title="Product Image Title"
-        />
+      // title="Product Image Title"
+      />
       <CardContent>
         <Typography variant="body2" color="textSecondary" component="p">
           {productDescription}
         </Typography>
       </CardContent>
       <CardActions disableSpacing>
-        <IconButton aria-label="add to favorites">
-          <FavoriteIcon />
-        </IconButton>
-        <IconButton aria-label="share">
-          <ShareIcon />
-        </IconButton>
-           <LinkProduct productId={productId}/>
+               <LinkProduct productId={productId} />
         <Box>
           Цена: {productPrice}
         </Box>
+        {iconCard ? (
+          <Link
+            component="button"
+            variant="body2"
+          >
+            <IconAddToCard aria-label="addtocard" visual={iconCard} />
+          </Link>
+        ) : (
+          <Link
+            component="button"
+            variant="body2"
+            onClick={() => {
+              dispatch(Addtocartducks.setAmountProduct(countProduct));
+              dispatch(Addtocartducks.addProductToCard(productId));
+              dispatch(Addtocartducks.setAmountProductList(productId, 1));
+            }}
+          >
+            <IconAddToCard aria-label="addtocard" visual={iconCard} />
+          </Link>
+        )
+
+        }
+
       </CardActions>
     </Card>
   );

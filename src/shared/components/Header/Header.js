@@ -16,6 +16,9 @@ import NotificationsIcon from '@material-ui/icons/Notifications';
 import MoreIcon from '@material-ui/icons/MoreVert';
 import { Button } from '@material-ui/core';
 import { NavLink } from 'react-router-dom';
+import AddShoppingCartIcon from '@material-ui/icons/AddShoppingCart';
+import { useSelector } from 'react-redux';
+import * as Addtocartducks from '../../../shared/ducks/addtocart.duck';
 
 const useStyles = makeStyles((theme) => ({
   grow: {
@@ -108,6 +111,8 @@ export function Header() {
     setMobileMoreAnchorEl(event.currentTarget);
   };
 
+  const amountProduct = useSelector(Addtocartducks.selectAmountProduct);
+
   const menuId = 'primary-search-account-menu';
   const renderMenu = (
     <Menu
@@ -149,8 +154,9 @@ export function Header() {
             <NotificationsIcon />
           </Badge>
         </IconButton>
-        <p>Notifications</p>
+          <p>Notifications</p>
       </MenuItem>
+      
       <MenuItem onClick={handleProfileMenuOpen}>
         <IconButton
           aria-label="account of current user"
@@ -219,6 +225,13 @@ export function Header() {
                 <NotificationsIcon />
               </Badge>
             </IconButton>
+            
+            <IconButton aria-label="show 17 new notifications" color="inherit" to="/card" exact component={NavLink}>
+              <Badge badgeContent={amountProduct} color="secondary">
+              <AddShoppingCartIcon />
+              </Badge>
+            </IconButton>
+                
             <IconButton
               edge="end"
               aria-label="account of current user"
