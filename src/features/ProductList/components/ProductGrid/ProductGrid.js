@@ -2,6 +2,7 @@ import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import ProductList from '../ProductList/ProductList';
+import { useSelector } from 'react-redux';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -23,6 +24,7 @@ export default function ProductGrid(props) {
   const { isSale, isNew, isInStock } = props.switch;
   const classes = useStyles();
   const switchKeys = Object.keys(props.switch);
+  const categoryList = useSelector(state => state.addtocart.categoryFilter);
 
   
 
@@ -32,7 +34,7 @@ export default function ProductGrid(props) {
     let dataFiltered;
     const dataPrice = props.data.filter(product => (product.price >= minPrice && product.price <= maxPrice));
     const dataRating = dataPrice.filter(product => (product.rating >= minRating && product.rating <= maxRating));
-   
+       
    const filterSwitch = () => {
     if (isSale === false && isNew === false && isInStock === false) {
       return  dataRating;
@@ -57,9 +59,23 @@ export default function ProductGrid(props) {
   };
 }
 
+
+let dataCategory  = filterSwitch().filter(function(el){
+   return categoryList.filter(function(category){
+      return el.categories == category;
+   }).length != 0
+});
+
+if (dataCategory.length == 0){
+  dataCategory = filterSwitch()
+};
+
+//console.log(dataCategory, 'dataCategory');
+//console.log(categoryList, 'categoryList');
+
     return (
       <React.Fragment>
-        {filterSwitch().map((catalog) => (
+        {dataCategory.map((catalog) => (
           <Grid item xs={4}>
             <ProductList productTitle={catalog.title} productImage={catalog.photo} productDescription={catalog.description}
               productPrice={catalog.price} productId={catalog.id} />

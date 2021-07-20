@@ -12,8 +12,11 @@ import FormGroup from '@material-ui/core/FormGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import Switch from '@material-ui/core/Switch';
-
-
+import Checkbox from '@material-ui/core/Checkbox';
+import * as Addtocartducks from '../../../shared/ducks/addtocart.duck';
+import { useDispatch, useSelector } from 'react-redux';
+import * as DataDuck from '../ducks/categorySaga.duck';
+import { useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles((theme) => ({
@@ -33,26 +36,40 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export function Catalog() {
+  
+  // const classes = useStyles();
+  // const { data, error, isLoading } = useQuery("catalog", async () => {
+  //   let { data } = await getCatalog();
+  //   return data;
+  // });
+  useEffect(() => {
+    dispatch(DataDuck.load());
+  }, []); 
+  
   const classes = useStyles();
-  const { data, error, isLoading } = useQuery("catalog", async () => {
-    let { data } = await getCatalog();
-    return data;
-  });
-
+  const dispatch = useDispatch();
+  let dataSaga = useSelector(DataDuck.selectData);
+  let errorSaga = useSelector(DataDuck.selectError);
+  let isLoadingSaga = useSelector(DataDuck.selectIsLoading);
+ 
+ 
+  
   let min;
   let max;
   let minarr = [];
   let maxarr = [];
 
-  if (isLoading) {
+  if (isLoadingSaga) {
     min = 0;
     max = 1000;
   } else {
-    maxarr = data.reduce((acc, curr) => acc.price > curr.price ? acc : curr);
-    minarr = data.reduce((acc, curr) => acc.price <= curr.price ? acc : curr);
+    maxarr = dataSaga.reduce((acc, curr) => acc.price > curr.price ? acc : curr);
+    minarr = dataSaga.reduce((acc, curr) => acc.price <= curr.price ? acc : curr);
     min = minarr.price;
     max = maxarr.price;
   };
+
+  console.log(dataSaga, 'dataSaga');
 
   const [valuePrice, setValuePrice] = React.useState([Math.round(min), Math.round(max)]);
   const [valueRating, setValueRating] = React.useState([1, 5]);
@@ -62,7 +79,20 @@ export function Catalog() {
     isInStock: false,
   });
 
-  const handleChangePrice = (event, newValue) => {
+let categoryList = [];
+let categoryListFull = [];
+
+if (isLoadingSaga) {
+
+} else {
+  dataSaga.forEach((c) => {
+  categoryListFull.push(c.categories);
+   });
+};
+
+categoryList = Array.from(new Set(categoryListFull)); 
+
+   const handleChangePrice = (event, newValue) => {
     setValuePrice(newValue);
   };
   const handleChangeRating = (event, newValue) => {
@@ -71,13 +101,22 @@ export function Catalog() {
   const handleChangeSwitch = (event) => {
     setStateSwitch({ ...stateSwitch, [event.target.name]: event.target.checked });
   };
+const handleChangeCategory = (event) => {
+      if (event.target.checked){
+      dispatch(Addtocartducks.addCategoryList(event.target.name));
+    } else {
+      dispatch(Addtocartducks.removeCategoryList(event.target.name));
+    };
+  
+  };
+
 
   return (
     <div className="page">
-      {isLoading ? (
+      {isLoadingSaga ? (
         <div>Loading...</div>
-      ) : error ? (
-        <div>Какой-то Error {error.message}</div>
+      ) : errorSaga ? (
+        <div>Какой-то Error {errorSaga.message}</div>
       ) : (
         <Grid container className={classes.root} spacing={2}>
           <Grid item xs={3}>
@@ -129,10 +168,28 @@ export function Catalog() {
                 </FormGroup>
                 {/* <FormHelperText>Be careful</FormHelperText> */}
               </FormControl>
-            </div>
+              </div>
+
+              <div className={classes.category}>
+               <Typography id="range-slider" gutterBottom>
+                Категории
+              </Typography>
+              {categoryList.map((c) => (
+            <div key = {c}>
+             <Checkbox
+             name={c}
+             onChange={handleChangeCategory}
+        color="primary"
+        inputProps={{ 'aria-label': 'secondary checkbox' }}
+      />
+           {c}
+           </div>
+         ))} 
+         </div>
           </Grid>
+          
           <Grid item xs={9}>
-            <ProductGrid price={valuePrice} rating={valueRating} switch={stateSwitch} data={data} />
+            <ProductGrid price={valuePrice} rating={valueRating} switch={stateSwitch} data={dataSaga} />
           </Grid>
         </Grid>
       )

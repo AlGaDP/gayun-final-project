@@ -9,11 +9,29 @@ export const ADD_AMOUNT = `${namespace}/ADD_AMOUNT`;
 export const SET_AMOUNT = `${namespace}/SET_AMOUNT`;
 export const UPDATE_AMOUNT = `${namespace}/UPDATE_AMOUNT`;
 export const REMOVE_CARD = `${namespace}/REMOVE_CARD`;
+export const REMOVE_PRODUCT_CARD = `${namespace}/REMOVE_PRODUCT_CARD`;
+export const ADD_CATEGORY = `${namespace}/ADD_CATEGORY`;
+export const REMOVE_CATEGORY = `${namespace}/REMOVE_CATEGORY`;
+
 
 // action creators
 export function addProductToCard(item) {
   return {
     type: ADD_ITEM,
+    item,
+  }
+}
+
+export function addCategoryList(item) {
+  return {
+    type: ADD_CATEGORY,
+    item,
+  }
+}
+
+export function removeCategoryList(item) {
+  return {
+    type: REMOVE_CATEGORY,
     item,
   }
 }
@@ -49,9 +67,17 @@ export function setRemoveCard(value) {
     }
 }
 
+export function setRemoveProductCard(value) {
+    return {
+      type: REMOVE_PRODUCT_CARD,
+      value,
+    }
+}
+
 // initial state
 const initialState = {
     idProduct: [],
+    categoryFilter: [],
     amountProduct: null,
     amountProductList: [],
 };
@@ -68,6 +94,17 @@ export function reducer(state = initialState, action) {
     case ADD_ITEM:
        return produce(state, (s) => {
         s.idProduct.push(item);
+      });
+
+       case ADD_CATEGORY:
+       return produce(state, (s) => {
+        s.categoryFilter.push(item);
+      });
+
+        case REMOVE_CATEGORY:
+       return produce(state, (s) => {
+        const delCategory = s.categoryFilter.findIndex(c => c === item);
+          s.categoryFilter.splice(delCategory, 1);
       });
 
     case ADD_AMOUNT:
@@ -100,6 +137,16 @@ export function reducer(state = initialState, action) {
           s.amountProduct = null;
         }
       });
+
+      case REMOVE_PRODUCT_CARD:
+        return produce(state, s => {
+           const delId = s.idProduct.findIndex(item => item === value);
+           const delIdList = s.amountProductList.findIndex(item => item.id === value);
+           s.idProduct.splice(delId, 1);
+           s.amountProductList.splice(delId, 1);
+           s.amountProduct--;
+
+        });
 
     default:
       return state;

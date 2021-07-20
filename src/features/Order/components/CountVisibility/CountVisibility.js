@@ -46,6 +46,7 @@ export function CountVisibility(props) {
             aria-label="reduce"
             onClick={() => {
               setCount(Math.max(count - 1, 0));
+              count === 0 ? dispatch(Addtocartducks.setAmountProductListUpdate(props.productID, count)) :
                dispatch(Addtocartducks.setAmountProductListUpdate(props.productID, count - 1));
             }}
           >
