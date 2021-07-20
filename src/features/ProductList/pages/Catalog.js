@@ -45,31 +45,19 @@ export function Catalog() {
   useEffect(() => {
     dispatch(DataDuck.load());
   }, []); 
-  
+
   const classes = useStyles();
   const dispatch = useDispatch();
   let dataSaga = useSelector(DataDuck.selectData);
   let errorSaga = useSelector(DataDuck.selectError);
   let isLoadingSaga = useSelector(DataDuck.selectIsLoading);
- 
- 
-  
+
+  let categoryList = [];
+  let categoryListFull = [];
   let min;
   let max;
   let minarr = [];
   let maxarr = [];
-
-  if (isLoadingSaga) {
-    min = 0;
-    max = 1000;
-  } else {
-    maxarr = dataSaga.reduce((acc, curr) => acc.price > curr.price ? acc : curr);
-    minarr = dataSaga.reduce((acc, curr) => acc.price <= curr.price ? acc : curr);
-    min = minarr.price;
-    max = maxarr.price;
-  };
-
-  console.log(dataSaga, 'dataSaga');
 
   const [valuePrice, setValuePrice] = React.useState([Math.round(min), Math.round(max)]);
   const [valueRating, setValueRating] = React.useState([1, 5]);
@@ -79,20 +67,7 @@ export function Catalog() {
     isInStock: false,
   });
 
-let categoryList = [];
-let categoryListFull = [];
-
-if (isLoadingSaga) {
-
-} else {
-  dataSaga.forEach((c) => {
-  categoryListFull.push(c.categories);
-   });
-};
-
-categoryList = Array.from(new Set(categoryListFull)); 
-
-   const handleChangePrice = (event, newValue) => {
+  const handleChangePrice = (event, newValue) => {
     setValuePrice(newValue);
   };
   const handleChangeRating = (event, newValue) => {
@@ -107,9 +82,32 @@ const handleChangeCategory = (event) => {
     } else {
       dispatch(Addtocartducks.removeCategoryList(event.target.name));
     };
-  
   };
 
+  if (isLoadingSaga) {
+
+  if (dataSaga === null) {
+    min = 0;
+    max = 1000;
+  } else {
+    maxarr = dataSaga.reduce((acc, curr) => acc.price > curr.price ? acc : curr);
+    minarr = dataSaga.reduce((acc, curr) => acc.price <= curr.price ? acc : curr);
+    min = minarr.price;
+    max = maxarr.price;
+  };
+
+if (dataSaga === null) {
+
+} else {
+  dataSaga.forEach((c) => {
+  categoryListFull.push(c.categories);
+   });
+};
+
+console.log(dataSaga, 'dataSaga');
+console.log(isLoadingSaga, 'isLoadingSaga');
+
+categoryList = Array.from(new Set(categoryListFull)); 
 
   return (
     <div className="page">
@@ -196,4 +194,14 @@ const handleChangeCategory = (event) => {
       }
     </div>
   );
+
+} else {
+  return (
+    <div className="page">
+     
+        <div>Loading...</div>
+      
+    </div>
+  );
+}
 }
