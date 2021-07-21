@@ -26,52 +26,45 @@ export default function ProductGrid(props) {
   const switchKeys = Object.keys(props.switch);
   const categoryList = useSelector(state => state.addtocart.categoryFilter);
 
-  
-
-
-
   function FormRow() {
     let dataFiltered;
     const dataPrice = props.data.filter(product => (product.price >= minPrice && product.price <= maxPrice));
     const dataRating = dataPrice.filter(product => (product.rating >= minRating && product.rating <= maxRating));
-       
-   const filterSwitch = () => {
-    if (isSale === false && isNew === false && isInStock === false) {
-      return  dataRating;
-    } else {
-    return dataRating.filter((product) => {
-      let result = true;
 
-      if (props.switch.isNew) {
-        result = result && product.isNew;
-      }
+    const filterSwitch = () => {
+      if (isSale === false && isNew === false && isInStock === false) {
+        return dataRating;
+      } else {
+        return dataRating.filter((product) => {
+          let result = true;
 
-      if (props.switch.isSale) {
-        result = result && product.isSale;
-      }
+          if (props.switch.isNew) {
+            result = result && product.isNew;
+          }
 
-      if (props.switch.isInStock) {
-        result = result && product.isInStock;
-      }
+          if (props.switch.isSale) {
+            result = result && product.isSale;
+          }
 
-      return result;
+          if (props.switch.isInStock) {
+            result = result && product.isInStock;
+          }
+
+          return result;
+        });
+      };
+    }
+
+
+    let dataCategory = filterSwitch().filter(function (el) {
+      return categoryList.filter(function (category) {
+        return el.categories == category;
+      }).length != 0
     });
-  };
-}
 
-
-let dataCategory  = filterSwitch().filter(function(el){
-   return categoryList.filter(function(category){
-      return el.categories == category;
-   }).length != 0
-});
-
-if (dataCategory.length == 0){
-  dataCategory = filterSwitch()
-};
-
-//console.log(dataCategory, 'dataCategory');
-//console.log(categoryList, 'categoryList');
+    if (dataCategory.length == 0) {
+      dataCategory = filterSwitch()
+    };
 
     return (
       <React.Fragment>

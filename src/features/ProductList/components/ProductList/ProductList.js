@@ -67,22 +67,12 @@ export default function ProductList(props) {
   const iconList = new Set(productList);
   let iconCard = false;
 
-
-
-  //const iconCard = productList.has(2);
-  //console.log(productList, 'productList');
-  //console.log(iconCard, 'iconCard');
   if (iconList.length != 0) {
     iconCard = iconList.has(productId);
   };
   return (
     <Card className={classes.root} >
       <CardHeader
-        // avatar={
-        //   <Avatar aria-label="recipe" className={classes.avatar}>
-        //     R
-        //   </Avatar>
-        // }
         action={
           <IconButton aria-label="settings">
             <MoreVertIcon />
@@ -101,7 +91,7 @@ export default function ProductList(props) {
         </Typography>
       </CardContent>
       <CardActions disableSpacing>
-               <LinkProduct productId={productId} />
+        <LinkProduct productId={productId} />
         <Box>
           Цена: {productPrice}
         </Box>
@@ -125,11 +115,7 @@ export default function ProductList(props) {
             <IconAddToCard aria-label="addtocard" visual={iconCard} />
           </Link>
         )
-
-        }
-
-      </CardActions>
+        }      </CardActions>
     </Card>
   );
 }
-

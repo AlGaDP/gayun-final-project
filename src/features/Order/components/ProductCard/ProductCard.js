@@ -19,7 +19,6 @@ const useStyles = makeStyles({
   root: {
     width: '100%',
     maxWidth: 500,
-
   },
   listPage: {
     display: "flex",
@@ -39,88 +38,97 @@ export function ProductCard(props) {
     return data;
   });
   const productListCard = useSelector(state => state.addtocart.idProduct);
-  const dataListCard = data.filter(({ id }) => productListCard.includes(id));
-  const newDataListCard = dataListCard.slice();
   const summAmountProduct = useSelector(state => state.addtocart.amountProductList);
   const dispatch = useDispatch();
 
   let summTotal = 0;
 
-  newDataListCard.forEach(function (a) {
-    return summAmountProduct.forEach(function (b) {
-      if (a.id === b.id) {
-        a.amount = b.coll * a.price;
-        summTotal += a.amount;
-      }
-    })
-  });
+  if (data === undefined) {
+    return (
+      <div className="page">
+        <div>Loading...</div>
+      </div>
+    );
+  } else {
+    const dataListCard = data.filter(({ id }) => productListCard.includes(id));
+    const newDataListCard = dataListCard.slice();
 
-   return (
-    <div className={classes.root}>
-      <Box className={classes.listPage} width="auto">
-        <Box className={classes.title} width="auto" >
-          <Typography variant="subtitle2" gutterBottom>Название........................................................</Typography>
-          {dataListCard.map((c) => (
-            <div key={c.id}>
-              <Typography variant="h5" display="inline"><ProductListCard title={c.title} /></Typography>
-            </div>
-          ))}
+    newDataListCard.forEach(function (a) {
+      return summAmountProduct.forEach(function (b) {
+        if (a.id === b.id) {
+          a.amount = b.coll * a.price;
+          summTotal += a.amount;
+        }
+      })
+    });
 
+    return (
+      <div className={classes.root}>
+        <Box className={classes.listPage} width="auto">
+          <Box className={classes.title} width="auto" >
+            <Typography variant="subtitle2" gutterBottom>Название........................................................</Typography>
+            {dataListCard.map((c) => (
+              <div key={c.id}>
+                <Typography variant="h5" display="inline"><ProductListCard title={c.title} /></Typography>
+              </div>
+            ))}
+
+          </Box>
+          <Box className={classes.title}>
+            <Typography variant="subtitle2" gutterBottom>Цена</Typography>
+            {newDataListCard.map((c) => (
+              <div key={c.id}>
+                <Typography variant="h5" display="inline"><ProductListCard title={c.price} /></Typography>
+              </div>
+            ))}
+          </Box>
+
+          <Box className={classes.title} >
+            <Typography variant="subtitle2" gutterBottom>Колличество..............</Typography>
+            {newDataListCard.map((c) => (
+              <div key={c.id}>
+                <CountVisibility productID={c.id} />
+              </div>
+            ))}
+          </Box>
+
+          <Box className={classes.title}>
+            <Typography variant="subtitle2" gutterBottom>Сумма</Typography>
+            {newDataListCard.map((c) => (
+              <div key={c.id}>
+                <Typography variant="h5" display="inline"><ProductListCard title={c.amount} /></Typography>
+              </div>
+            ))}
+          </Box>
+
+          <Box className={classes.title}>
+            <Typography variant="subtitle2" gutterBottom>Удалить</Typography>
+            {newDataListCard.map((c) => (
+              <div key={c.id}>
+
+                <Button
+                  onClick={() => {
+                    dispatch(Addtocartducks.setRemoveProductCard(c.id));
+                  }}>
+                  <DeleteIcon aria-label="deletedcon" />
+                </Button>
+              </div>
+            ))}
+          </Box>
         </Box>
-        <Box className={classes.title}>
-          <Typography variant="subtitle2" gutterBottom>Цена</Typography>
-          {newDataListCard.map((c) => (
-            <div key={c.id}>
-              <Typography variant="h5" display="inline"><ProductListCard title={c.price} /></Typography>
-            </div>
-          ))}
-        </Box>
-
-        <Box className={classes.title} >
-          <Typography variant="subtitle2" gutterBottom>Колличество..............</Typography>
-          {newDataListCard.map((c) => (
-            <div key={c.id}>
-              <CountVisibility productID={c.id} />
-            </div>
-          ))}
-        </Box>
-
-        <Box className={classes.title}>
-          <Typography variant="subtitle2" gutterBottom>Сумма</Typography>
-          {newDataListCard.map((c) => (
-            <div key={c.id}>
-              <Typography variant="h5" display="inline"><ProductListCard title={c.amount} /></Typography>
-            </div>
-          ))}
-        </Box>
-
-        <Box className={classes.title}>
-          <Typography variant="subtitle2" gutterBottom>Удалить</Typography>
-          {newDataListCard.map((c) => (
-            <div key={c.id}>
-
-              <Button 
-                onClick={() => {
-                  dispatch(Addtocartducks.setRemoveProductCard(c.id));
-                }}>
-                <DeleteIcon aria-label="deletedcon" />
-              </Button>
-            </div>
-          ))}
-        </Box>
-
-      </Box>
-      <Divider variant="middle" />
-      <Typography variant="h5" display="inline">Общая сумма заказа: {summTotal}</Typography>
-      <Button variant="contained" color="secondary" to="/order" exact component={NavLink}>
-        Оформить заказ
-      </Button>
-      <Button variant="contained" color="secondary"
-        onClick={() => {
-          dispatch(Addtocartducks.setRemoveCard(true));
-        }}>
-        Очистить корзину
-      </Button>
-    </div>
-  );
+        
+        <Divider variant="middle" />
+        <Typography variant="h5" display="inline">Общая сумма заказа: {summTotal}</Typography>
+        <Button variant="contained" color="secondary" to="/order" exact component={NavLink}>
+          Оформить заказ
+        </Button>
+        <Button variant="contained" color="secondary"
+          onClick={() => {
+            dispatch(Addtocartducks.setRemoveCard(true));
+          }}>
+          Очистить корзину
+        </Button>
+      </div>
+    );
+  }
 }

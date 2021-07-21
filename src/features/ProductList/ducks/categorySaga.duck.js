@@ -21,37 +21,11 @@ const slice = createSlice({
       state.data = data;
       state.error = error;
     },
-    load: (s, a) => {},
-    setIsOpen: (s, a) => {
-      s.isOpen = a.payload.value;
-    }
+    load: (s, a) => { },
   },
 });
 
 export const { loadStart, loadEnd, setIsOpen, load } = slice.actions;
-
-// export const loadOld = () => {
-//   return async (dispatch) => {
-//     dispatch(loadStart());
-
-//     let error = null,
-//       data = [];
-
-//     try {
-//       let response = await fetch("https://60d6c6a9307c300017a5f4af.mockapi.io/catalog");
-//       data = await response.json();
-//     } catch (e) {
-//       error = e.message;
-//     }
-
-//     dispatch(loadEnd({
-//       data,
-//       error,
-//     }));
-//   };
-// };
-
-//console.log (response, 'dataDuck');
 
 export const reducer = slice.reducer;
 export default reducer;
@@ -59,10 +33,8 @@ export default reducer;
 export const selectIsLoading = (s) => s[namespace].isLoading;
 export const selectData = (s) => s[namespace].data;
 export const selectError = (s) => s[namespace].error;
-export const selectIsOpen = (s) => s[namespace].isOpen;
 
 function* loadDataSaga() {
-  console.log('----------------- saga started');
   yield put(loadStart());
 
   let error = null,
@@ -82,12 +54,5 @@ function* loadDataSaga() {
 }
 
 export function* sagas() {
-  console.log('----------------- saga started');
   yield takeEvery(load, loadDataSaga);
-  // yield takeEvery(load, function* (action) {
-  //   console.log('----------------- saga has received an action', action);
-  // });
-  // yield takeEvery(setIsOpen, function* (action) {
-  //   console.log('----------------- saga has received an action', action);
-  // });
 }

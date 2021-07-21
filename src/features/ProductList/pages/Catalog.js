@@ -37,11 +37,17 @@ const useStyles = makeStyles((theme) => ({
 
 export function Catalog() {
   
-  // const classes = useStyles();
+  //-----------------старая логика загрузки данных------------------------
   // const { data, error, isLoading } = useQuery("catalog", async () => {
   //   let { data } = await getCatalog();
   //   return data;
   // });
+
+  //---------------- загрузка данных через Saga-------------------------
+  //---------------------------||---------------------------------------
+  //---------------------------||---------------------------------------
+  //---------------------------\/---------------------------------------
+
   useEffect(() => {
     dispatch(DataDuck.load());
   }, []); 
@@ -54,8 +60,8 @@ export function Catalog() {
 
   let categoryList = [];
   let categoryListFull = [];
-  let min;
-  let max;
+  let min = 0;
+  let max = 1000000;
   let minarr = [];
   let maxarr = [];
 
@@ -84,28 +90,25 @@ const handleChangeCategory = (event) => {
     };
   };
 
-  if (isLoadingSaga) {
-
   if (dataSaga === null) {
-    min = 0;
-    max = 1000;
-  } else {
+  
+    return (
+      <div className="page">
+       
+          <div>Loading...</div>
+        
+      </div>
+    );
+
+} else {
     maxarr = dataSaga.reduce((acc, curr) => acc.price > curr.price ? acc : curr);
     minarr = dataSaga.reduce((acc, curr) => acc.price <= curr.price ? acc : curr);
     min = minarr.price;
     max = maxarr.price;
-  };
 
-if (dataSaga === null) {
-
-} else {
   dataSaga.forEach((c) => {
   categoryListFull.push(c.categories);
-   });
-};
-
-console.log(dataSaga, 'dataSaga');
-console.log(isLoadingSaga, 'isLoadingSaga');
+    });
 
 categoryList = Array.from(new Set(categoryListFull)); 
 
@@ -192,15 +195,6 @@ categoryList = Array.from(new Set(categoryListFull));
         </Grid>
       )
       }
-    </div>
-  );
-
-} else {
-  return (
-    <div className="page">
-     
-        <div>Loading...</div>
-      
     </div>
   );
 }
