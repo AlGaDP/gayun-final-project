@@ -9,14 +9,14 @@ export function LinkProduct(props) {
   const productPage = useHistory();
   return (
     <Link
-    component="button"
-    variant="body2"
-    onClick={() => {
-      productPage.push("/catalog/"+props.productId);
-    }}
-  >
-<ButtonMy color="primary" size="large"/>
-    {/* <button>Подробнее</button> */}
-  </Link>
+      component="button"
+      variant="body2"
+      onClick={() => {
+        productPage.push("/catalog/" + props.productId);
+      }}
+    >
+      <ButtonMy color="primary" size="large" />
+
+    </Link>
   );
 }

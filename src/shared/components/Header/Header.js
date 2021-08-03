@@ -64,7 +64,6 @@ const useStyles = makeStyles((theme) => ({
   },
   inputInput: {
     padding: theme.spacing(1, 1, 1, 0),
-    // vertical padding + font size from searchIcon
     paddingLeft: `calc(1em + ${theme.spacing(4)}px)`,
     transition: theme.transitions.create('width'),
     width: '100%',
@@ -154,9 +153,9 @@ export function Header() {
             <NotificationsIcon />
           </Badge>
         </IconButton>
-          <p>Notifications</p>
+        <p>Notifications</p>
       </MenuItem>
-      
+
       <MenuItem onClick={handleProfileMenuOpen}>
         <IconButton
           aria-label="account of current user"
@@ -183,7 +182,7 @@ export function Header() {
           >
             <MenuIcon />
           </IconButton>
-         
+
           <div className={classes.search}>
             <div className={classes.searchIcon}>
               <SearchIcon />
@@ -198,20 +197,10 @@ export function Header() {
             />
           </div>
 
-          <Button color="inherit" to="/category" exact component={NavLink} >Категории</Button>
+          {/* <Button color="inherit" to="/category" exact component={NavLink} >Категории</Button> */}
           <Button color="inherit" to="/catalog" exact component={NavLink} >Каталог</Button>
           <Button color="inherit" to="/dostavkaoplata" exact component={NavLink} >Доставка и оплата</Button>
           <Button color="inherit" to="/about" exact component={NavLink} >О нас</Button>
-          {/* <NavLink to="/dostavkaoplata" exact>
-          <Typography className={classes.title} variant="h6" noWrap>
-            Доставка и оплата
-          </Typography>
-          </NavLink>
-          <NavLink to="/about" exact>
-          <Typography className={classes.title} variant="h6" noWrap>
-            О нас
-          </Typography>
-          </NavLink> */}
 
           <div className={classes.grow} />
           <div className={classes.sectionDesktop}>
@@ -225,13 +214,13 @@ export function Header() {
                 <NotificationsIcon />
               </Badge>
             </IconButton>
-            
+
             <IconButton aria-label="show 17 new notifications" color="inherit" to="/card" exact component={NavLink}>
               <Badge badgeContent={amountProduct} color="secondary">
-              <AddShoppingCartIcon />
+                <AddShoppingCartIcon />
               </Badge>
             </IconButton>
-                
+
             <IconButton
               edge="end"
               aria-label="account of current user"

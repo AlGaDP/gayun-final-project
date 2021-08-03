@@ -35,7 +35,6 @@ export function ProductPage(props) {
     iconCard = iconList.has(productId);
   };
 
-  //console.log (props.product.id, 'props');
   return (
     <div className="container">
 

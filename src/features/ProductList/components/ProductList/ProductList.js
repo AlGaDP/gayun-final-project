@@ -83,7 +83,6 @@ export default function ProductList(props) {
       <CardMedia
         className={classes.media}
         image={productImage}
-      // title="Product Image Title"
       />
       <CardContent>
         <Typography variant="body2" color="textSecondary" component="p">

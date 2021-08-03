@@ -14,14 +14,8 @@ export default function ButtonMy(props) {
   const classes = useStyles();
 
   return (
-   <div className={classes.root}>
-      {/* <Button>Default</Button> */}
+    <div className={classes.root}>
       < Button color="primary">Подробнее</Button>
-      {/* <Button color="secondary">Secondary</Button>
-      <Button disabled>Disabled</Button>
-      <Button href="#text-buttons" color="primary">
-        Link
-      </Button> */}
     </div>
   );
 }

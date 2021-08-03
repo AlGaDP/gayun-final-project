@@ -18,16 +18,7 @@ export default function IconAddToCard(props) {
 
   return (
     <div className={classes.root}>
-      {/* <IconButton aria-label="delete">
-        <DeleteIcon />
-      </IconButton>
-      <IconButton aria-label="delete" disabled color="primary">
-        <DeleteIcon />
-      </IconButton>
-      <IconButton color="secondary" aria-label="add an alarm">
-        <AlarmIcon />
-      </IconButton> */}
-      {props.visual ? (
+     {props.visual ? (
       <IconButton color="primary" aria-label="add to shopping cart" disabled >
         <AddShoppingCartIcon />
       </IconButton>) : (
